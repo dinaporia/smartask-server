@@ -1,16 +1,17 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
-var cookieParser = require('cookie-parser');
+// var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+
 
 // const passport = require('passport');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/usersRouter');
-const prefsRouter = require('./routes/prefsRouter');
+//const prefsRouter = require('./routes/prefsRouter');
 const tasksRouter = require('./routes/tasksRouter');
-const scheduleRouter = require('./routes/scheduleRouter');
+//const scheduleRouter = require('./routes/scheduleRouter');
 
 const mongoose = require('mongoose');
 
@@ -20,7 +21,7 @@ const connect = mongoose.connect(url, {
   useFindAndModify: false,
   useNewUrlParser: true, 
   useUnifiedTopology: true
-})
+});
 
 connect.then(() => console.log('Connected to server'), err => console.log(err));
 

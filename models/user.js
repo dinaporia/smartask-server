@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const passportlocalMongoose = require('passport-local-mongoose');
+//const passportlocalMongoose = require('passport-local-mongoose');
 
 const taskSchema = require('./task');
 const schedPrefSchema = require('./schedPrefs');
@@ -10,17 +10,32 @@ const taskPrefSchema = require('./taskPrefs');
 const userSchema = new Schema({
     username: {
         type: String,
-        unique: true
+        unique: true,
+        required: true
     }, 
-    tasks: [taskSchema],
-    schedule: scheduleSchema,
-    schedPref: schedPrefSchema, 
-    taskPref: taskPrefSchema,
-    // optional
-    facebookId: String
+    password: {
+        type: String,
+        required: true
+    },
+    tasks: [{
+        type: taskSchema, 
+        default: () => ({})     // ensure that default values will be used to populate if empty
+    }],
+    schedule: {
+        type: scheduleSchema,
+        default: () => ({})
+    },
+    schedPref: {
+        type: schedPrefSchema,
+        default: () => ({})
+    },
+    taskPref: {
+        type: taskPrefSchema,
+        default: () => ({})
+    }
 }, 
 { timestamps: true }
 );
 
-userSchema.plugin(passportlocalMongoose);
+//userSchema.plugin(passportlocalMongoose);
 module.exports = mongoose.model('User', userSchema);

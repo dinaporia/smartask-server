@@ -3,12 +3,11 @@ const Schema = mongoose.Schema;
 
 const scheduleSchema = new Schema({
     forDate: {
-        type: Date,
-        required: true
+        type: String,
     },
     schedule: {
         type: Array,
-        required: true
+        default: []
     },
     notToday: {
         type: Array,
@@ -18,6 +17,8 @@ const scheduleSchema = new Schema({
         type: Array,
         default: []
     }
-});
+},
+{ timestamps: true }
+);
 
 module.exports = scheduleSchema;

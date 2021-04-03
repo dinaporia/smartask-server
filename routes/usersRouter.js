@@ -1,12 +1,16 @@
 var express = require('express');
 const User = require('../models/user');
+const SchedPrefs = require('../models/schedPrefs');
+const TaskPrefs = require('../models/taskPrefs');
+const Task = require('../models/task');
+const Schedule = require('../models/schedule');
 // const passport = require('passport');
 // const authenticate = require('../authenticate');
 
-var router = express.Router();
+const usersRouter = express.Router();
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
+usersRouter.get('/', function(req, res, next) {
   User.find()
     .then(users => {
       res.statusCode = 200;
@@ -16,58 +20,29 @@ router.get('/', function(req, res, next) {
     .catch(err => next(err));
 });
 
+/* register new user */
+usersRouter.post('/signup', (req, res, next) => {
+  // check if user already exists
+  User.findOne({username: req.body.username})
+  .then( user => {
+    if (user) {
+      const err = new Error(`User ${req.body.username} already exists.`);
+      err.status = 403;
+      return next(err);
+    } else {
+    // create new user 
+      User.create(req.body)
+      .then (user => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'applicatoin/json');
+        res.json({status: 'New user added', user: user});   
+      })
+      .catch(err => next(err));
+    }
+  })
+  .catch(err => next(err));
 
-// router.post('/signup', (req, res ) => {
-//   User.register(
-//     new User({username: req.body.username}),
-//     // req.body.password,
-//     (err, user) => {
-//       if (err) {
-//         res.statusCode = 500; // server error
-//         res.setHeader('Content-Type', 'application/json');
-//         res.json( {err: err} );
-//       } else {
-//         // if (req.body.firstname) {
-//         //   user.firstname = req.body.firstname;
-//         // } 
-//         // if (req.body.lastname) {
-//         //   user.lastname = req.body.lastname;
-//         // }
-//         user.save(err => {
-//           if (err) {
-//             res.statusCode = 500;
-//             res.setHeader('Content-Type', 'application/json');
-//             res.json( {err: err} );
-//           }
-//           // passport.authenticate('local')(req, res, () => {
-//           //   res.statusCode = 200;
-//           //   res.setHeader('Content-Type', 'application/json');
-//           //   res.json({success: true, status: 'Registration Successful'});
-//           // })
-//         });
-//       }
-//     }
-//   )
-// });
+})
 
-// // replace with or integrate facebook/google etc oauth
-// router.post('/login', (req, res) => {
-//  // const token = authenticate.getToken({_id: req.user._id});
-//   res.statusCode = 200;
-//   res.setHeader('Content-Type', 'application/json');
-//   res.json({success: true, status: 'You are logged in!'});
-// });
 
-// router.get('/logout', (req, res, next) => {
-//   if (req.session) {
-//     req.session.destroy();
-//     res.clearCookie('session-id');
-//     res.redirect('/');
-//   } else {
-//     const err = new Error('You are not logged in!');
-//     err.status = 401;
-//     return next(err);
-//   }
-// });
-
-module.exports = router;
+module.exports = usersRouter;
