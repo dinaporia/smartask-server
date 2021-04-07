@@ -2,6 +2,7 @@ const express = require('express');
 const User = require('../models/user');
 const tasksRouter = express.Router();
 const Task = require('../models/task');
+const user = require('../models/user');
 
 const userId = "6068778a0bc8f6405c0f9304";
 
@@ -91,22 +92,90 @@ tasksRouter.route('/')
 
 
 tasksRouter.route('/:taskId')
-// retrieve single task
+// receive task id string, return task
 .get((req, res, next) => {
-
+    User.findById(userId)
+    .then( user => {
+        if(user) {
+            const task = user.tasks.filter( task => task.id === req.params.taskId)[0];
+            if (task) {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(task);
+            } else {
+                err = new Error('Task not found');
+                err.status = 404;
+                return next(err);
+            }
+        } else {
+            err = new Error('User not found');
+            err.status = 404;
+            return next(err);
+        }
+    })
+    .catch(err => next(err));
 })
 // cannot add to single task
 .post((req, res, next) => {
     res.statusCode = 403;
-    res.end(`POST operation not supported on /tasks/${taskId}`);
+    res.end(`POST operation not supported on /tasks/${req.params.taskId}`);
 })
 // edit task
 .put((req, res, next) => {
-
+    User.findById(userId)
+    .then( user => {
+        if(user) {
+            let task = user.tasks.filter( task => task.id === req.params.taskId)[0];
+            if (task) {
+                // dynamically update properties contained in req.body
+                for (let property in req.body) {
+                    user.tasks.id(task._id)[property] = req.body[property];
+                } 
+                user.save()
+                .then( user => {
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.json(user.tasks);
+                });
+            } else {
+                err = new Error('Task not found');
+                err.status = 404;
+                return next(err);
+            }
+        } else {
+            err = new Error('User not found');
+            err.status = 404;
+            return next(err);
+        }
+    })
+    .catch(err => next(err));
 })
-// delete task
+// receive task id string, delete task, return list
 .delete((req, res, next) => {
-
+    User.findById(userId)
+    .then( user => {
+        if (user) {
+            const task = user.tasks.filter( task => task.id === req.params.taskId)[0];
+            if (task) {
+                user.tasks.id(task._id).remove();
+                user.save()
+                .then( user => {
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.json(user.tasks);
+                });
+            } else {
+                err = new Error('Task not found');
+                err.status = 404;
+                return next(err);
+            }
+        } else {
+            err = new Error('User not found');
+            err.status = 404;
+            return next(err);
+        }
+    })
+    .catch(err => next(err));
 });
 
 
