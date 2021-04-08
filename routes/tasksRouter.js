@@ -1,8 +1,7 @@
 const express = require('express');
 const User = require('../models/user');
 const tasksRouter = express.Router();
-const Task = require('../models/task');
-const user = require('../models/user');
+
 
 const userId = "6068778a0bc8f6405c0f9304";
 
@@ -125,7 +124,7 @@ tasksRouter.route('/:taskId')
     User.findById(userId)
     .then( user => {
         if(user) {
-            let task = user.tasks.filter( task => task.id === req.params.taskId)[0];
+            const task = user.tasks.filter( task => task.id === req.params.taskId)[0];
             if (task) {
                 // dynamically update properties contained in req.body
                 for (let property in req.body) {

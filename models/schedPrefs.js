@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const schedPrefSchema = new Schema({
     hours: {
         type: Number,
-        default: 320,
+        default: 180,
         min: 60,
         max: 480
     },

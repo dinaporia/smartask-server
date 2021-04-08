@@ -26,17 +26,9 @@ const taskPrefSchema = new Schema({
     },
     duration: {
         type: Number,
-        default: 90,
+        default: 30,
         min: 15, 
         max: 180
-    },
-    completed: {
-        type: Boolean,
-        default: false
-    },
-    recurring: {
-        type: Boolean,
-        default: false
     }
 }, 
 { timestamps: true }

@@ -25,11 +25,11 @@ const userSchema = new Schema({
         type: scheduleSchema,
         default: () => ({})
     },
-    schedPref: {
+    schedPrefs: {
         type: schedPrefSchema,
         default: () => ({})
     },
-    taskPref: {
+    taskPrefs: {
         type: taskPrefSchema,
         default: () => ({})
     }
