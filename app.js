@@ -11,7 +11,7 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/usersRouter');
 const prefsRouter = require('./routes/prefsRouter');
 const tasksRouter = require('./routes/tasksRouter');
-//const scheduleRouter = require('./routes/scheduleRouter');
+const scheduleRouter = require('./routes/scheduleRouter');
 
 const mongoose = require('mongoose');
 
@@ -45,7 +45,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/tasks', tasksRouter);
 app.use('/prefs', prefsRouter);
-// app.use('/schedule', scheduleRouter);
+app.use('/schedule', scheduleRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

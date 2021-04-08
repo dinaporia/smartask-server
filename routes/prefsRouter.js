@@ -1,10 +1,4 @@
 
-/*
-/prefs GET (retrieve all preferences)
-/prefs/sched PUT (update schedule prefs)
-/prefs/task PUT (update task prefs)
-
-*/
 const express = require('express');
 const User = require('../models/user');
 const prefsRouter = express.Router();

@@ -1,9 +1,5 @@
 var express = require('express');
 const User = require('../models/user');
-const SchedPrefs = require('../models/schedPrefs');
-const TaskPrefs = require('../models/taskPrefs');
-const Task = require('../models/task');
-const Schedule = require('../models/schedule');
 // const passport = require('passport');
 // const authenticate = require('../authenticate');
 
@@ -42,7 +38,6 @@ usersRouter.post('/signup', (req, res, next) => {
   })
   .catch(err => next(err));
 
-})
-
+});
 
 module.exports = usersRouter;

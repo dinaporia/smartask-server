@@ -28,10 +28,10 @@ tasksRouter.route('/')
     User.findById(userId)
     .then( user => {
         if(user) {
-            // check if task has already been added
+            // check if task already exists
             const tasks = user.tasks.filter( task => task.id === req.body.id);
             if (tasks.length) {
-                err = new Error('Task id already exists');
+                err = new Error('Duplicate task');
                 err.status = 400;
                 return next(err);
             } else {
@@ -64,13 +64,14 @@ tasksRouter.route('/')
     User.findById(userId)
     .then( user => {
         if (user) {
-            // error handling for when some but not all tasks to delete are valid?
+            // check that tasks exist
             const deletedTasks = user.tasks.filter( task => req.body.includes(task.id));
             if (!deletedTasks.length) {
                 err = new Error('No tasks to delete');
                 err.status = 400;
                 return next(err);
             }
+            // retrieve and remove each task by object id
             deletedTasks.forEach(task => {
                 user.tasks.id(task._id).remove();
             });
@@ -91,11 +92,12 @@ tasksRouter.route('/')
 
 
 tasksRouter.route('/:taskId')
-// receive task id string, return task
+// return task based on param
 .get((req, res, next) => {
     User.findById(userId)
     .then( user => {
         if(user) {
+            // retrieve task by id
             const task = user.tasks.filter( task => task.id === req.params.taskId)[0];
             if (task) {
                 res.statusCode = 200;
@@ -119,11 +121,12 @@ tasksRouter.route('/:taskId')
     res.statusCode = 403;
     res.end(`POST operation not supported on /tasks/${req.params.taskId}`);
 })
-// edit task
+// receive object with task id and updates, return task list
 .put((req, res, next) => {
     User.findById(userId)
     .then( user => {
         if(user) {
+            // retrieve task by id
             const task = user.tasks.filter( task => task.id === req.params.taskId)[0];
             if (task) {
                 // dynamically update properties contained in req.body
@@ -149,11 +152,12 @@ tasksRouter.route('/:taskId')
     })
     .catch(err => next(err));
 })
-// receive task id string, delete task, return list
+// receive task id, delete task, return list
 .delete((req, res, next) => {
     User.findById(userId)
     .then( user => {
         if (user) {
+            // retrieve task by id and remove
             const task = user.tasks.filter( task => task.id === req.params.taskId)[0];
             if (task) {
                 user.tasks.id(task._id).remove();

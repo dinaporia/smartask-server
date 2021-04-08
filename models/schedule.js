@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const scheduleSchema = new Schema({
     forDate: {
         type: String,
+        default:  (new Date()).toISOString(),
     },
     schedule: {
         type: Array,
